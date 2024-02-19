@@ -30,36 +30,28 @@ function Board({ xIsNext, squares, onPlay }) {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
 
-  function renderSquare(k) {
-    return (
-      <Square key={k} value={squares[k]} onSquareClick={() => handleClick(k)} />
-    );
-  }
-
-  function renderRow(i) {
-    const row = [];
-    for (let j = 0; j < 3; ++j) {
-      row.push(renderSquare(i * 3 + j));
-    }
+  const board = [0, 1, 2].map((i) => {
+    const row = [0, 1, 2].map((j) => {
+      const k = i * 3 + j;
+      return (
+        <Square
+          key={k}
+          value={squares[k]}
+          onSquareClick={() => handleClick(k)}
+        />
+      );
+    });
     return (
       <div key={i} className="board-row">
         {row}
       </div>
     );
-  }
-
-  function renderBoard() {
-    const rows = [];
-    for (let i = 0; i < 3; ++i) {
-      rows.push(renderRow(i));
-    }
-    return rows;
-  }
+  });
 
   return (
     <>
       <div className="status">{status}</div>
-      {renderBoard()}
+      {board}
     </>
   );
 }
