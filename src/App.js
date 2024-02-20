@@ -9,8 +9,11 @@ function Square({ value, onSquareClick }) {
 }
 
 function Board({ xIsNext, squares, onPlay }) {
+  const winner = calculateWinner(squares);
+  const draw = !winner && isBoardFull(squares);
+
   function handleClick(i) {
-    if (calculateWinner(squares) || squares[i]) {
+    if (winner || draw || squares[i]) {
       return;
     }
     const nextSquares = squares.slice();
@@ -22,10 +25,11 @@ function Board({ xIsNext, squares, onPlay }) {
     onPlay(nextSquares);
   }
 
-  const winner = calculateWinner(squares);
   let status;
   if (winner) {
     status = "Winner: " + winner;
+  } else if (draw) {
+    status = "Draw";
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
@@ -116,4 +120,8 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+function isBoardFull(squares) {
+  return squares.every((x) => x);
 }
