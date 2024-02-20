@@ -1,15 +1,20 @@
 import { useState } from "react";
 
-function Square({ value, onSquareClick }) {
+function Square({ value, onSquareClick, highlight }) {
+  const backgroundColor = highlight ? "lime" : "white";
   return (
-    <button className="square" onClick={onSquareClick}>
+    <button
+      className="square"
+      onClick={onSquareClick}
+      style={{ background: backgroundColor }}
+    >
       {value}
     </button>
   );
 }
 
 function Board({ xIsNext, squares, onPlay }) {
-  const winner = calculateWinner(squares);
+  const [winner, winLine] = calculateWinner(squares);
   const draw = !winner && isBoardFull(squares);
 
   function handleClick(i) {
@@ -42,6 +47,7 @@ function Board({ xIsNext, squares, onPlay }) {
           key={k}
           value={squares[k]}
           onSquareClick={() => handleClick(k)}
+          highlight={winLine.includes(k)}
         />
       );
     });
@@ -116,10 +122,10 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return [squares[a], lines[i]];
     }
   }
-  return null;
+  return [null, []];
 }
 
 function isBoardFull(squares) {
